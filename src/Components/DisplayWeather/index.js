@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { SearchIcon, ButtonContainer, ImgContainer, Input, Flex, Button, WeatherDataContainer, AlignCenterInFlex, VerticalLine, IDigitaliseImgContainer } from './style'
+import { AlignCentre, SearchIcon, SubHeading, Heading, ButtonContainer, ImgContainer, Input, Flex, Button, WeatherDataContainer, AlignEndInFlex, VerticalLine, IDigitaliseImgContainer } from './style'
 import data from '../../images/france.jpg'
 import searchIcon from '../../images/search.png'
 import location from '../../images/location.png'
@@ -11,26 +11,28 @@ export default function DisplayWeather() {
     const [imgUrl, setImgUrl] = useState(data)
 
     let imgOfCountries = {
-        'france': true,
-        'tunisia': true,
-        'japan': true,
-        'qatar': true
+        'france': 'france',
+        'tunisia': 'north africa',
+        'qatar': 'qatar',
+        'japan': 'japan'
     }
 
-    let buttonColors = ['blue', 'deeppink', 'deepskyblue', 'darkorange']
+    let buttonColors = ['rgb(7 6 228)', 'rgb(24 161 156)', 'rgb(207 39 145)', 'rgb(241 60 1 / 93%)']
 
     const getCountryImage = (country) => {
         if (country in imgOfCountries) {
-            import(`../../images/${country}.jpg`).then((img) => setImgUrl(img.default))
+           import(`../../images/${country}.jpg`).then((img) => setImgUrl(img.default))
+          
         } else {
-            import(`../../images/random.jpg`).then(img => setImgUrl(img.default))
+           import(`../../images/random.jpg`).then((img) => setImgUrl(img.default))
         }
+        
     }
 
     const handleChange = (e) => {
         setCity(e.target.value)
     }
-    
+
     // delay function to cancel multiple API requests with every key stroke
     const delayFunction = (fn, delay) => {
         let timer;
@@ -56,7 +58,7 @@ export default function DisplayWeather() {
             weatherDataToBeDisplayed.humidity = res.main.humidity
             weatherDataToBeDisplayed.city = res.name
             weatherDataToBeDisplayed.temp = res.main.temp
-            getCountryImage(city)
+            getCountryImage(city);
             setWeatherDetail(weatherDataToBeDisplayed)
         }).catch(err => console.log(err))
     }, [city])
@@ -69,34 +71,34 @@ export default function DisplayWeather() {
                     <img src={idigitalise} alt='' />
                 </IDigitaliseImgContainer>
                 <WeatherDataContainer>
-                    <div>
-                        <h1>{weatherDetail.city.toLocaleUpperCase()}</h1>
-                        <h1>{weatherDetail.temp} 	&#176;</h1>
-                        <h2>{weatherDetail.description.toLocaleUpperCase()}</h2>
-                    </div>
-                    <AlignCenterInFlex>
-                        <h2>Humidity</h2>
-                        <h1>{weatherDetail.humidity}%</h1>
-                    </AlignCenterInFlex>
+                    <AlignCentre>
+                        <Heading>{weatherDetail.city.toLocaleUpperCase()}</Heading>
+                        <Heading>{weatherDetail.temp} &#176;</Heading>
+                        <SubHeading fontSize='18px' Spacing='3px' mbFontSize ='9px'>{weatherDetail.description.toLocaleUpperCase()}</SubHeading>
+                    </AlignCentre>
+                    <AlignEndInFlex>
+                        <SubHeading fontSize='20px'>HUMIDITY</SubHeading>
+                        <SubHeading fontSize='35px' mbFontSize='18px'>{weatherDetail.humidity}%</SubHeading>
+                    </AlignEndInFlex>
 
-                    <AlignCenterInFlex>
+                    <AlignEndInFlex>
                         <VerticalLine />
-                    </AlignCenterInFlex>
+                    </AlignEndInFlex>
 
-                    <AlignCenterInFlex>
-                        <h2>Wind</h2>
-                        <h1>{weatherDetail.wind.speed} K/M</h1>
-                    </AlignCenterInFlex>
+                    <AlignEndInFlex>
+                        <SubHeading fontSize='20px'>WIND</SubHeading>
+                        <SubHeading fontSize='35px' mbFontSize='18px'>{weatherDetail.wind.speed} K/M</SubHeading>
+                    </AlignEndInFlex>
                 </WeatherDataContainer>
             </ImgContainer>
             <Flex>
-                <SearchIcon left='10px' src={searchIcon} alt='' />
+                <SearchIcon left='20px' src={searchIcon} alt='' />
                 <Input type='search' placeholder='Search Location' onChange={(e) => delayFunction(handleChange, 700)(e)} />
-                <SearchIcon right='10px' src={location} alt='' />
+                <SearchIcon right='20px' src={location} alt='' />
             </Flex>
             <ButtonContainer>
                 {Object.keys(imgOfCountries).map((country, i) => {
-                    return <Button key={i} color={buttonColors[i]} onClick={() => setCity(country)}>{country.toLocaleUpperCase()}</Button>
+                    return <Button key={i} color={buttonColors[i]} onClick={() => setCity(country)}>{imgOfCountries[country].toLocaleUpperCase()}</Button>
                 })}
             </ButtonContainer>
         </>
